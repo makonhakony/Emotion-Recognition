@@ -27,18 +27,23 @@ namespace EmotionRecognition_FunTime.Controllers
         [Route("ERGet")]
         public CategorizedEntityCollection EntityRecognitionGet()
         {
-            var response = client.RecognizeEntities("I had a wonderful trip to Seattle last week.");
-            Console.WriteLine("Named Entities:");
-            foreach (var entity in response.Value)
-            {
-                Console.WriteLine($"\tText: {entity.Text},\tCategory: {entity.Category},\tSub-Category: {entity.SubCategory}");
-                Console.WriteLine($"\t\tScore: {entity.ConfidenceScore:F2},\tLength: {entity.Length},\tOffset: {entity.Offset}\n");
-            }
-            return response.Value;
+            return EntityRecognition("I had a wonderful trip to Seattle last week.");
         }
 
         [HttpPost]
         [Route("ERPost")]
+        public CategorizedEntityCollection PostParam(string Text)
+        {
+            return EntityRecognition(Text);
+        }
+
+        [HttpPost]
+        [Route("ERPost")]
+        public CategorizedEntityCollection PostForm(IFormCollection input)
+        {
+            return EntityRecognition(input["Text"]);
+        }
+
         public CategorizedEntityCollection EntityRecognition(string Text)
         {
             var response = client.RecognizeEntities(Text);
@@ -49,13 +54,6 @@ namespace EmotionRecognition_FunTime.Controllers
                 Console.WriteLine($"\t\tScore: {entity.ConfidenceScore:F2},\tLength: {entity.Length},\tOffset: {entity.Offset}\n");
             }
             return response.Value;
-        }
-
-        [HttpGet("test")]
-        public string Test()
-        {
-            Console.WriteLine("test");
-            return "test";
         }
     }
 }
