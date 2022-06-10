@@ -25,6 +25,7 @@ import { NgxChatboxModule } from "ngx-chatbox";
     HttpClientModule,
     FormsModule,
     NgxChatboxModule,
+    HttpClientModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
