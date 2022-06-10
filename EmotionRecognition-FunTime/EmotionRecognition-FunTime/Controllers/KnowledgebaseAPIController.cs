@@ -1,30 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Web;
-using Microsoft.AspNetCore.Http;
+
 
 namespace EmotionRecognition_FunTime.Controllers
 {
-    public class KnowledgebaseController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class KnowledgebaseAPIController : ControllerBase
     {
-
-        [Route("[controller]")]
-        public IActionResult send(object data)
-        {
-            MakeRequest(data);
-            return View();
-        }
-
-        static async void MakeRequest(object data)
-        {
+        [HttpPost]
+        static async void MakeRequest(object data) {
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
 
             // Request headers
-
+            
 
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "cfc28ddcb40a4ff2a95cd393ef517736");//key
             //var queryingURL = "https://ft-qna.azurewebsites.net";
@@ -42,6 +37,7 @@ namespace EmotionRecognition_FunTime.Controllers
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 response = await client.PostAsync(uri, content);
             }
-        }
+        }       
+                  
     }
 }
