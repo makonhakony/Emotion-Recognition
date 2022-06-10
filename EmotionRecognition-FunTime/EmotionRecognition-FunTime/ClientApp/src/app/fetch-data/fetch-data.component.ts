@@ -37,7 +37,7 @@ export class FetchDataComponent {
     const xhttp = new XMLHttpRequest();
     var jsonData = JSON.stringify(this.json);
 
-    this.http.post('/api/Knowledgebase', jsonData)
+    this.http.post('/Knowledgebase/MakeRequest', jsonData)
       .subscribe((result:any) => {
         this.response = result;
         alert('successful');
