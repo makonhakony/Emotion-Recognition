@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: "./fetch-data.component.html"
 })
 export class FetchDataComponent {
-  
+  baseUrl = ""
   title = "chat-float";
   
   response = "";//AI's response
@@ -24,8 +24,10 @@ export class FetchDataComponent {
     //this.response = this.message;
     this.message = "";
   }
-
-  constructor(private http: HttpClient) { }
+  
+  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.baseUrl = baseUrl
+  }
 
 
   getMessage($event: any) {
@@ -36,8 +38,9 @@ export class FetchDataComponent {
 
     const xhttp = new XMLHttpRequest();
     var jsonData = JSON.stringify(this.json);
+    console.log(jsonData)
 
-    this.http.post('/Knowledgebase/MakeRequest', jsonData)
+    this.http.post(this.baseUrl + '/Knowledgebase/MakeRequest', jsonData)
       .subscribe((result:any) => {
         this.response = result;
         alert('successful');
