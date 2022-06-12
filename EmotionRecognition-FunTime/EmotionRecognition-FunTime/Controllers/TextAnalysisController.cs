@@ -22,26 +22,56 @@ namespace EmotionRecognition_FunTime.Controllers
         {
             _logger = logger;
         }
-
+        //TODO
         [HttpGet]
         [Route("ERGet")]
-        public CategorizedEntityCollection EntityRecognitionGet()
+        public CategorizedEntityCollection TextAnalyticsGet()
         {
             return EntityRecognition("I had a wonderful trip to Seattle last week.");
         }
 
         [HttpPost]
         [Route("ERPost")]
-        public CategorizedEntityCollection PostParam(string Text)
+        public TextAnalyticModel? TextAnalyticsPost(IFormCollection input)
         {
-            return EntityRecognition(Text);
-        }
+            TextAnalyticModel item = new TextAnalyticModel();
+            item.NER = EntityRecognition(input["Text"]);
+            foreach (var ner in item.NER)
+            {
+                if (ner.SubCategory == "GPE")
+                {
+                    item.location.Add(ner.Text);
+                }
+                else if (ner.SubCategory == "DateRange")
+                {
+                    item.time.Add(ner.Text);
+                }
+                //TODO
+                else if (ner.SubCategory == "Person")
+                {
+                    item.name.Add(ner.Text);    
+                }
+            }
 
-        [HttpPost]
-        [Route("ERPost")]
-        public CategorizedEntityCollection PostForm(IFormCollection input)
-        {
-            return EntityRecognition(input["Text"]);
+            item.DS = SentimentAnalysis(input["Text"]);
+            item.reason = item.DS.Sentiment;
+            if (item.DS.Sentiment == TextSentiment.Positive)
+            {
+
+            }
+            else if (item.DS.Sentiment == TextSentiment.Neutral)
+            {
+                
+            }
+            else if (item.DS.Sentiment == TextSentiment.Negative)
+            {
+
+            }
+            else if (item.DS.Sentiment != TextSentiment.Mixed)
+            {
+
+            }
+            return item;
         }
 
         public CategorizedEntityCollection EntityRecognition(string Text)
@@ -54,6 +84,23 @@ namespace EmotionRecognition_FunTime.Controllers
                 Console.WriteLine($"\t\tScore: {entity.ConfidenceScore:F2},\tLength: {entity.Length},\tOffset: {entity.Offset}\n");
             }
             return response.Value;
+        }
+
+        public DocumentSentiment SentimentAnalysis ( string Text)
+        {
+            DocumentSentiment documentSentiment = client.AnalyzeSentiment(Text);
+            Console.WriteLine($"Document sentiment: {documentSentiment.Sentiment}\n");
+
+            foreach (var sentence in documentSentiment.Sentences)
+            {
+                Console.WriteLine($"\tText: \"{sentence.Text}\"");
+                Console.WriteLine($"\tSentence sentiment: {sentence.Sentiment}");
+                Console.WriteLine($"\tPositive score: {sentence.ConfidenceScores.Positive:0.00}");
+                Console.WriteLine($"\tNegative score: {sentence.ConfidenceScores.Negative:0.00}");
+                Console.WriteLine($"\tNeutral score: {sentence.ConfidenceScores.Neutral:0.00}\n");
+            }
+
+            return documentSentiment;
         }
     }
 }
