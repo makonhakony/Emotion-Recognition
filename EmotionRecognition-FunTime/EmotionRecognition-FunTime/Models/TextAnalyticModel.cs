@@ -10,5 +10,15 @@ namespace EmotionRecognition_FunTime.Models
         public List<string> time { get; set; } = new List<string>();
         public CategorizedEntityCollection? NER { get; set; }
         public DocumentSentiment? DS { get; set; }
+
+        public TextAnalyticModel()
+        {
+            location = new List<string>();
+            name = new List<string>();
+            reason = null;
+            time = new List<string>();
+            NER = null;
+            DS = null;
+        }
     }
 }
