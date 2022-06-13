@@ -9,6 +9,7 @@
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <RootNamespace>EmotionRecognition_FunTime</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>7648cc6b-0ce2-4049-9584-e1cb578295c4</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

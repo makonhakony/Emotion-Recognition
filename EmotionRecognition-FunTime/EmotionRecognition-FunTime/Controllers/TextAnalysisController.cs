@@ -13,8 +13,8 @@ namespace EmotionRecognition_FunTime.Controllers
     [Route("[controller]")]
     public class TextAnalysisController : ControllerBase
     {
-        private static readonly AzureKeyCredential credentials = new AzureKeyCredential("4f3b6ced45c147f1a444ecae676f72d0");
-        private static readonly Uri endpoint = new Uri("https://ft-text-analytics-2.cognitiveservices.azure.com/");
+        private static readonly AzureKeyCredential credentials = new AzureKeyCredential("23919de0b43e4dafb9c1c0f73a8bf151");
+        private static readonly Uri endpoint = new Uri("https://ft-language-studio-service.cognitiveservices.azure.com/");
 
         private readonly ILogger<TextAnalysisController> _logger;
         TextAnalyticsClient client = new TextAnalyticsClient(endpoint, credentials);
@@ -55,22 +55,7 @@ namespace EmotionRecognition_FunTime.Controllers
 
             item.DS = SentimentAnalysis(input["Text"]);
             item.reason = item.DS.Sentiment;
-            if (item.DS.Sentiment == TextSentiment.Positive)
-            {
-
-            }
-            else if (item.DS.Sentiment == TextSentiment.Neutral)
-            {
-                
-            }
-            else if (item.DS.Sentiment == TextSentiment.Negative)
-            {
-
-            }
-            else if (item.DS.Sentiment != TextSentiment.Mixed)
-            {
-
-            }
+            
             return item;
         }
 
