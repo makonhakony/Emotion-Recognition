@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: "app-root",
-  templateUrl: "./fetch-data.component.html"
+  templateUrl: "./fetch-data.component.html",
+  styleUrls: ["./fetch-data.css"]
 })
 export class FetchDataComponent {
   baseUrl = ""
@@ -14,7 +15,7 @@ export class FetchDataComponent {
   //public resp: Text[] = [this.response];
   message = "";//Default response message
   input = ""; //User's input
-  json = { question: "" };//json object to be sent
+  json = { "answer": ""};//json object to be sent
 
   config = {
     title: "Chat",
@@ -26,24 +27,34 @@ export class FetchDataComponent {
   }
   
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl
+    this.baseUrl = baseUrl;
   }
 
 
   getMessage($event: any) {
     this.input = $event;
-    console.log(this.input);
-    this.json.question = this.input;
+    //console.log(this.input);
+    //this.json.question = this.input;
 
 
     const xhttp = new XMLHttpRequest();
     var jsonData = JSON.stringify(this.json);
-    console.log(jsonData)
+    
 
-    this.http.post(this.baseUrl + '/Knowledgebase/MakeRequest', jsonData)
-      .subscribe((result:any) => {
-        this.response = result;
-        alert('successful');
+    let formData = new FormData();
+    formData.append("question", this.input);
+
+
+    this.http.post(this.baseUrl + 'Knowledgebase/MakeRequest', formData)
+      .subscribe((result: any) => {
+        //let res = JSON.stringify(result);
+        console.log(result);
+        console.log(result.answers[0].answer);
+        
+        this.response = JSON.stringify(result.answers[0].answer);
+        
+        
+        //alert('successful');
       });
     //$.ajax({
     //  method: "POST",

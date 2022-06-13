@@ -1,6 +1,9 @@
 <input [(ngModel)]="message" />
 <button (click)="setData()">Send Bot Response</button>
 
-<ngx-chatbox [chatConfig]="config"
-             (onMessageInput)="getMessage($event)"
-             [serverResponse]="response"></ngx-chatbox>
+
+<div>
+  <ngx-chatbox [chatConfig]="config"
+               (onMessageInput)="getMessage($event)"
+               [serverResponse]="response"></ngx-chatbox>
+</div>
