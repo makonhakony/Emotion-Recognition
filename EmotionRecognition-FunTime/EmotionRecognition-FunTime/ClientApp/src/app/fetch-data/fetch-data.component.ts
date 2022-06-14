@@ -56,54 +56,9 @@ export class FetchDataComponent {
         
         //alert('successful');
       });
-    //$.ajax({
-    //  method: "POST",
-    //  url: "/api/Knowledgebase",
-    //  data: jsonData,
-    //  contentType: "application/json",
-    //  dataType: "json",
-    //  beforeSend: function (xhttp: any) {
-    //    console.log("ready");
-    //  },
-    //  success: function () {
-
-    //    alert("Success!");
-
-    //  },
-    //  error: function () {
-    //    alert("Failed. Status: " + xhttp.status + ".");
-
-    //  }
-
-    //});
 
 
-    //  $http.post('api/WarehousePlan/AllowWarehousePlan', $scope.modelVM).then(
-    //    function (successResponse) {
-    //      if (successResponse.status == '200') {
-    //        alert("Data Submit Successfully..");
-    //      }
-    //    },
-    //    function (errorResponse) {
-    //      alert("Not Successful");
-    //    });
-    //}
   }
-  //constructor(  , @Inject('BASE_URL') baseUrl: string) {
-  //  Http.post(baseUrl + 'Knowledgebase', Option: { params: { data: jsonData } }
-  //  ).subscribe((result: any) => {
-  //    this.response = result;
-  //  }, (error: any) => console.error(error));
-  //}
-
-  //constructor(private http: HttpClient) { }
-
-  //async ngOnInit() {
-  //  await this.loadData();
-  //}
-  //async loadData() {
-
-  //}
 
 
 }
