@@ -1,8 +1,13 @@
+using EmotionRecognition_FunTime.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+var connectionString = builder.Configuration.GetConnectionString("WebApiDatabase");
+builder.Services.AddDbContext<FunTimeDbContext>(x => x.UseSqlServer(connectionString));
 
 var app = builder.Build();
 

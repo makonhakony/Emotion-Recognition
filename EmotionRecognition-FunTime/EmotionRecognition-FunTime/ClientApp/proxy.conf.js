@@ -10,6 +10,7 @@ const PROXY_CONFIG = [
       "/weatherforecast",
       "/Knowledgebase",
       "/KnowledgebaseAPI"
+      "/user"
    ],
     target: target,
     secure: false

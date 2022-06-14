@@ -2,7 +2,7 @@
 {
     public class UserQuestion
     {
-        public Guid QuestionId { get; set; }
+        public Guid Id { get; set; }
         public string QuestionText { get; set; }
         public TextAnalyticModel QuestionAnalytics { get; set; }
         public Guid? FollowedUpQuestion { get; set; }
@@ -11,7 +11,7 @@
         public UserQuestion()
         {
             QuestionText = string.Empty;
-            QuestionId = Guid.Empty;
+            Id = Guid.Empty;
             FollowedUpQuestion = Guid.Empty;
             UserId = Guid.Empty;
             QuestionAnalytics = new TextAnalyticModel();
@@ -19,7 +19,7 @@
 
         public UserQuestion(Guid questionId, Guid userId)
         {
-            QuestionId = new Guid();
+            Id = new Guid();
             UserId = userId;
             FollowedUpQuestion = questionId;
             QuestionText = string.Empty;
