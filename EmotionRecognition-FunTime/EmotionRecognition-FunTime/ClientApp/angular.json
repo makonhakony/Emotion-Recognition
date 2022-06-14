@@ -30,7 +30,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": [ "https://platform.linkedin.com/badges/js/profile.js" ]
+            "scripts": [  ]
           },
           "configurations": {
             "production": {

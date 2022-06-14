@@ -40,11 +40,13 @@ export class HomeComponent {
   input = ""; //User's input
   json = { "answer": "" };//json object to be sent
 
+
   config = {
     title: "Chat",
     subTitle: "EmotionRecognition"
   };
   setData() {
+
     //this.response = this.message;
     this.message = "";
   }
@@ -82,6 +84,7 @@ export class HomeComponent {
 
 
   }
+
 
 
 }

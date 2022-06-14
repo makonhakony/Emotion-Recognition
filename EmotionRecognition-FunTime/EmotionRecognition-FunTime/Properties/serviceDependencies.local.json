@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "compute.appService1": {
+      "secretStore": null,
+      "group": "connections",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/FT-CoreUI",
+      "type": "compute.appService.windows",
+      "connectionId": null
+    },
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mssql1": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/ft-core-server/databases/FunTimeDb",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:WebApiDatabase"
+    }
+  }
+}
