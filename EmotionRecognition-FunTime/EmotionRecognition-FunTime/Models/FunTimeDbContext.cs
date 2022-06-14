@@ -12,9 +12,15 @@ namespace EmotionRecognition_FunTime.Models
         public DbSet<UserQuestion> QuestionUsers { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnModelCreating(builder);
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("WebApiDatabase");
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }

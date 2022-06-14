@@ -22,9 +22,9 @@ namespace EmotionRecognition_FunTime.Controllers
         [Route("GetId")]
         public User Getuser(string Name)
         {
-
             User user =  new User(Name);
             _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
             return user;
         }
 
@@ -36,6 +36,7 @@ namespace EmotionRecognition_FunTime.Controllers
             if (deleteUser != null)
             {
                 _dbContext.Users.Remove(deleteUser);
+                _dbContext.SaveChanges();
             }
             
         }

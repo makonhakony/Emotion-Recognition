@@ -8,7 +8,6 @@ using EmotionRecognition_FunTime.Models;
 
 namespace EmotionRecognition_FunTime.Controllers
 {
-    
     [ApiController]
     [Route("[controller]")]
     public class TextAnalysisController : ControllerBase
@@ -27,6 +26,8 @@ namespace EmotionRecognition_FunTime.Controllers
         [Route("ERGet")]
         public CategorizedEntityCollection TextAnalyticsGet()
         {
+            String result = "How was {0} in {1} at {2}";
+            Console.WriteLine(String.Format(result, "An", "DisneyLand","today"));
             return EntityRecognition("I had a wonderful trip to Seattle last week.");
         }
 
@@ -35,26 +36,25 @@ namespace EmotionRecognition_FunTime.Controllers
         public TextAnalyticModel? TextAnalyticsPost(IFormCollection input)
         {
             TextAnalyticModel item = new TextAnalyticModel();
-            item.NER = EntityRecognition(input["Text"]);
-            foreach (var ner in item.NER)
+            var NER = EntityRecognition(input["Text"]);
+            foreach (var ner in NER)
             {
-                if (ner.SubCategory == "GPE")
+                if (ner.Category == "Location")
                 {
-                    item.location.Add(ner.Text);
+                    item.location = ner.Text;
                 }
-                else if (ner.SubCategory == "DateRange")
+                else if (ner.Category == "DateTime")
                 {
-                    item.time.Add(ner.Text);
+                    item.time = ner.Text ;
                 }
-                //TODO
-                else if (ner.SubCategory == "Person")
+                else if (ner.Category == "Person")
                 {
-                    item.name.Add(ner.Text);    
+                    item.name = ner.Text;
                 }
             }
 
-            item.DS = SentimentAnalysis(input["Text"]);
-            item.reason = item.DS.Sentiment;
+            var DS = SentimentAnalysis(input["Text"]);
+            item.reason = DS.Sentiment;
             
             return item;
         }
