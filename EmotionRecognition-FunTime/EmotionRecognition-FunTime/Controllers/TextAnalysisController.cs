@@ -47,7 +47,7 @@ namespace EmotionRecognition_FunTime.Controllers
                 {
                     item.time = ner.Text ;
                 }
-                else if (ner.Category == "Person")
+                else if (ner.Category == "Person" || ner.Category == "PersonType")
                 {
                     item.name = ner.Text;
                 }
