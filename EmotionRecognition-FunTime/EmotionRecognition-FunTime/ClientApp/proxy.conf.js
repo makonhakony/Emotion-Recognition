@@ -9,7 +9,7 @@ const PROXY_CONFIG = [
       "/textanalysis",
       "/weatherforecast",
       "/Knowledgebase",
-      "/KnowledgebaseAPI"
+      "/KnowledgebaseAPI",
       "/user"
    ],
     target: target,
