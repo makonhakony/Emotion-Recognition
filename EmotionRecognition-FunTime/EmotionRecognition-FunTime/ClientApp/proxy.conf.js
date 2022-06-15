@@ -7,6 +7,9 @@ const PROXY_CONFIG = [
   {
     context: [
       "/textanalysis",
+      "/weatherforecast",
+      "/Knowledgebase",
+      "/KnowledgebaseAPI",
       "/user"
    ],
     target: target,
