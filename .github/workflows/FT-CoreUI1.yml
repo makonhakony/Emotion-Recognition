@@ -2,7 +2,7 @@ name: Build and deploy .NET Core app to Windows WebApp FT-CoreUI
 on:
   push:
     branches:
-    - dev
+    - main
 env:
   AZURE_WEBAPP_NAME: FT-CoreUI
   AZURE_WEBAPP_PACKAGE_PATH: EmotionRecognition-FunTime/publish
