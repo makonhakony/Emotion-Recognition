@@ -20,9 +20,11 @@ namespace EmotionRecognition_FunTime.Controllers
 
         [HttpGet]
         [Route("GetId")]
-        public User Getuser(string Name)
+        public User Getuser(string? Name)
         {
-            User user =  new User(Name);
+            User user =  Name != null
+                ? new User(Name)
+                : new User();
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
             return user;

@@ -7,23 +7,33 @@
         public TextAnalyticModel QuestionAnalytics { get; set; }
         public Guid? FollowedUpQuestion { get; set; }
         public Guid UserId { get; set; }
+        public bool IsFollowing { get; set; }
+        public bool HasUser { get; set; }
 
-        public UserQuestion()
+        public UserQuestion(Guid userId)
         {
             QuestionText = string.Empty;
-            Id = Guid.Empty;
+            Id = new Guid();
             FollowedUpQuestion = Guid.Empty;
-            UserId = Guid.Empty;
+            UserId = userId;
             QuestionAnalytics = new TextAnalyticModel();
+            IsFollowing = false;
+            HasUser = false;
         }
 
-        public UserQuestion(Guid questionId, Guid userId)
+        public UserQuestion(
+            Guid questionId, 
+            Guid userId,
+            TextAnalyticModel oldAnalytics
+            )
         {
             Id = new Guid();
-            UserId = userId;
             FollowedUpQuestion = questionId;
+            UserId = userId;
             QuestionText = string.Empty;
-            QuestionAnalytics = new TextAnalyticModel();
+            QuestionAnalytics = oldAnalytics;
+            IsFollowing = true;
+            HasUser = true;
         }
     }
 }
