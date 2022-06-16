@@ -5,6 +5,7 @@ using System.Globalization;
 using Azure.AI.TextAnalytics;
 using System.Text.Json;
 using EmotionRecognition_FunTime.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmotionRecognition_FunTime.Controllers
 {
@@ -16,14 +17,19 @@ namespace EmotionRecognition_FunTime.Controllers
         private static readonly Uri endpoint = new Uri("https://ft-language-studio-service.cognitiveservices.azure.com/");
 
         private readonly ILogger<TextAnalysisController> _logger;
+        private readonly FunTimeDbContext _dbContext;
+
         TextAnalyticsClient client = new TextAnalyticsClient(endpoint, credentials);
-        public TextAnalysisController(ILogger<TextAnalysisController> logger)
+        public TextAnalysisController(
+            ILogger<TextAnalysisController> logger,
+            FunTimeDbContext context)
         {
+            _dbContext = context;
             _logger = logger;
         }
         //TODO
         [HttpGet]
-        [Route("ERGet")]
+        [Route("Get")]
         public CategorizedEntityCollection TextAnalyticsGet()
         {
             String result = "How was {0} in {1} at {2}";
@@ -32,34 +38,97 @@ namespace EmotionRecognition_FunTime.Controllers
         }
 
         [HttpPost]
-        [Route("ERPost")]
-        public TextAnalyticModel? TextAnalyticsPost(IFormCollection input)
+        [Route("PostAnalytics")]
+        public UserQuestion? TextAnalyticsPost(IFormCollection input)
         {
-            TextAnalyticModel item = new TextAnalyticModel();
-            var NER = EntityRecognition(input["Text"]);
+            UserQuestion question;
+            
+            if( input["QuestionId"] == Guid.Empty || !input.ContainsKey("QuestionId"))
+            {
+                if (input["UserId"] == Guid.Empty || input["UserId"].ToString() == null)
+                {
+                    User user = new User();
+                    question = new UserQuestion(user.Id);
+                    _dbContext.Users.Add(user);
+                    _dbContext.SaveChanges();
+                }
+                else
+                {
+                    question = new UserQuestion(new Guid(input["UserId"]));
+                }
+
+            }
+            else
+            {
+                UserQuestion oldQuestion = GetOldAnalytics( new Guid(input["QuestionId"]));
+                question = new UserQuestion(
+                    new Guid(input["QuestionId"]),
+                    new Guid(input["UserId"]),
+                    oldQuestion.QuestionAnalytics
+                    );
+            }
+            question.QuestionText = input["Text"];
+
+            var NER = EntityRecognition(question.QuestionText);
             foreach (var ner in NER)
             {
                 if (ner.Category == "Location")
                 {
-                    item.location = ner.Text;
+                    question.QuestionAnalytics.location = question.QuestionAnalytics.location == ""
+                        ? ner.Text
+                        : question.QuestionAnalytics.location + "," + ner.Text;
+
                 }
                 else if (ner.Category == "DateTime")
                 {
-                    item.time = ner.Text ;
+                    question.QuestionAnalytics.time = question.QuestionAnalytics.time == ""
+                        ? ner.Text
+                        : question.QuestionAnalytics.time + "," + ner.Text;
                 }
                 else if (ner.Category == "Person" || ner.Category == "PersonType")
                 {
-                    item.name = ner.Text;
+                    question.QuestionAnalytics.name = question.QuestionAnalytics.name == ""
+                        ? ner.Text
+                        : question.QuestionAnalytics.name + "," + ner.Text;
                 }
             }
 
-            var DS = SentimentAnalysis(input["Text"]);
-            item.reason = DS.Sentiment;
-            
-            return item;
+            var DS = SentimentAnalysis(question.QuestionText);
+            foreach (var ds in DS.Sentences)
+            {
+                if (ds.Sentiment == TextSentiment.Positive)
+                {
+                    question.QuestionAnalytics.sentiment += "P"; 
+                }
+                else if (ds.Sentiment == TextSentiment.Neutral)
+                {
+                    question.QuestionAnalytics.sentiment += "X";
+                }
+                else if (ds.Sentiment == TextSentiment.Negative)
+                {
+                    question.QuestionAnalytics.sentiment += "N";
+                }
+                else
+                {
+                    question.QuestionAnalytics.sentiment += "Q";
+                }
+            }
+
+            _dbContext.QuestionUsers.Add(question);
+            _dbContext.SaveChanges();
+
+            return question;
         }
 
-        public CategorizedEntityCollection EntityRecognition(string Text)
+        private UserQuestion GetOldAnalytics(Guid quesionId)
+        {
+            return _dbContext
+                .QuestionUsers
+                .Include(x => x.QuestionAnalytics)
+                .First(x => x.Id == quesionId);
+        }
+
+        private CategorizedEntityCollection EntityRecognition(string Text)
         {
             var response = client.RecognizeEntities(Text);
             Console.WriteLine("Named Entities:");
@@ -71,7 +140,7 @@ namespace EmotionRecognition_FunTime.Controllers
             return response.Value;
         }
 
-        public DocumentSentiment SentimentAnalysis ( string Text)
+        private DocumentSentiment SentimentAnalysis ( string Text)
         {
             DocumentSentiment documentSentiment = client.AnalyzeSentiment(Text);
             Console.WriteLine($"Document sentiment: {documentSentiment.Sentiment}\n");
