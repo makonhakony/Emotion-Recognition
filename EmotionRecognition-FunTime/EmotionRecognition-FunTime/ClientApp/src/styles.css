@@ -14,3 +14,39 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+h1 {
+  text-align: center;
+}
+
+
+.chat {
+  background-color: rgba(0,0,0,0.8) !important;
+  float: right;
+}
+
+div.info {
+  width: 100%;
+  height: 200px;
+  margin: auto;
+}
+
+div.info > *{
+    float:left;
+    width: 30%;
+    padding:50px;
+}
+
+.details {
+  list-style-type: none;
+}
+
+  .details > * {
+    margin: auto;
+    text-align: center;
+  }
+
+li.name {
+  font-size: 25px;
+  font-weight: 900;
+}
