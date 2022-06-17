@@ -75,8 +75,8 @@ export class HomeComponent {
     this.http.post(this.baseUrl + 'Knowledgebase/MakeRequest', formData)
       .subscribe((result: any) => {
         //let res = JSON.stringify(result);
-        console.log(result);
-        console.log(result.answers[0].answer);
+        //console.log(result);
+        //console.log(result.answers[0].answer);
 
         this.response = JSON.stringify(result.answers[0].answer);
 
