@@ -7,13 +7,13 @@
 
         public User()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             Name = null;
         }
 
         public User (string name)
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             Name = name;
         }
     }

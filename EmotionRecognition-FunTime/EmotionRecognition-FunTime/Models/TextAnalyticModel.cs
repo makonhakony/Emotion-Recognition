@@ -5,18 +5,18 @@ namespace EmotionRecognition_FunTime.Models
     public class TextAnalyticModel
     {
         public Guid Id { get; set; }
-        public string location { get; set; }
-        public string name { get; set; }
-        public string sentiment { get; set; }
-        public string time { get; set; }
+        public string Location { get; set; }
+        public string Name { get; set; }
+        public string Sentiment { get; set; }
+        public string Time { get; set; }
 
         public TextAnalyticModel()
         {
             Id = Guid.NewGuid();
-            location = "";
-            name = "";
-            sentiment = "";
-            time = "";
+            Location = "";
+            Name = "";
+            Sentiment = "";
+            Time = "";
         }
     }
 }

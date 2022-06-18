@@ -1,4 +1,6 @@
-﻿namespace EmotionRecognition_FunTime.Models
+﻿using System.Text.Json;
+
+namespace EmotionRecognition_FunTime.Models
 {
     public class UserQuestion
     {
@@ -10,14 +12,18 @@
         public bool IsFollowing { get; set; }
         public bool HasUser { get; set; }
 
+        public UserQuestion(JsonElement item)
+        {
+
+        }
         public UserQuestion(Guid userId)
         {
+            Id = Guid.NewGuid();
             QuestionText = string.Empty;
-            Id = new Guid();
             FollowedUpQuestion = Guid.Empty;
             UserId = userId;
             QuestionAnalytics = new TextAnalyticModel();
-            IsFollowing = false;
+            IsFollowing = true;
             HasUser = false;
         }
 
@@ -27,7 +33,7 @@
             TextAnalyticModel oldAnalytics
             )
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             FollowedUpQuestion = questionId;
             UserId = userId;
             QuestionText = string.Empty;
