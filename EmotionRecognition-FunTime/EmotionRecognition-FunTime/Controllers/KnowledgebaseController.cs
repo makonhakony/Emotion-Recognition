@@ -66,7 +66,7 @@ namespace EmotionRecognition_FunTime.Controllers
             JObject convert  = JObject.Parse(result);
             string val = isNeutral
                 ? convert["answers"][0]["answer"].ToString()
-                : String.Format(convert["answers"][0]["answer"].ToString(), data["Name"], data["Place"], data["Time"]);
+                : String.Format(convert["answers"][0]["answer"].ToString(), data["Name"], data["Location"], data["Time"]);
             QnaModel returnVal = new QnaModel(val);
             return returnVal;
         }
