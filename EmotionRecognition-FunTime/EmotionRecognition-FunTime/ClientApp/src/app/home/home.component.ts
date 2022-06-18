@@ -69,6 +69,7 @@ export class HomeComponent {
 
 
     this.http.post(this.baseUrl+ 'textanalysis/PostAnalytics', formDataAnalyics).subscribe((analyticsRes:any)=>{
+      console.log(analyticsRes)
       if (!analyticsRes["hasUser"]){
         this.userId = analyticsRes["userId"]
       }
@@ -85,7 +86,6 @@ export class HomeComponent {
 
       this.http.post(this.baseUrl + 'Knowledgebase/MakeRequest', formDataQnA)
       .subscribe((result: any) => {
-        console.log(result);
         this.response = result["text"];
       });
     })
