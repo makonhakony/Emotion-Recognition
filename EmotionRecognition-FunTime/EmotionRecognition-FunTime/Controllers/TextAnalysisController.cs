@@ -45,7 +45,7 @@ namespace EmotionRecognition_FunTime.Controllers
             
             if( input["QuestionId"] == Guid.Empty || !input.ContainsKey("QuestionId"))
             {
-                if (input["UserId"] == Guid.Empty || input["UserId"].ToString() == null)
+                if (input["UserId"] == Guid.Empty || !input.ContainsKey("UserId"))
                 {
                     User user = new User();
                     question = new UserQuestion(user.Id);
@@ -74,22 +74,22 @@ namespace EmotionRecognition_FunTime.Controllers
             {
                 if (ner.Category == "Location")
                 {
-                    question.QuestionAnalytics.location = question.QuestionAnalytics.location == ""
+                    question.QuestionAnalytics.Location = question.QuestionAnalytics.Location == ""
                         ? ner.Text
-                        : question.QuestionAnalytics.location + "," + ner.Text;
+                        : question.QuestionAnalytics.Location + "," + ner.Text;
 
                 }
                 else if (ner.Category == "DateTime")
                 {
-                    question.QuestionAnalytics.time = question.QuestionAnalytics.time == ""
+                    question.QuestionAnalytics.Time = question.QuestionAnalytics.Time == ""
                         ? ner.Text
-                        : question.QuestionAnalytics.time + "," + ner.Text;
+                        : question.QuestionAnalytics.Time + "," + ner.Text;
                 }
                 else if (ner.Category == "Person" || ner.Category == "PersonType")
                 {
-                    question.QuestionAnalytics.name = question.QuestionAnalytics.name == ""
+                    question.QuestionAnalytics.Name = question.QuestionAnalytics.Name == ""
                         ? ner.Text
-                        : question.QuestionAnalytics.name + "," + ner.Text;
+                        : question.QuestionAnalytics.Name + "," + ner.Text;
                 }
             }
 
@@ -98,20 +98,27 @@ namespace EmotionRecognition_FunTime.Controllers
             {
                 if (ds.Sentiment == TextSentiment.Positive)
                 {
-                    question.QuestionAnalytics.sentiment += "P"; 
+                    question.QuestionAnalytics.Sentiment += "p"; 
                 }
                 else if (ds.Sentiment == TextSentiment.Neutral)
                 {
-                    question.QuestionAnalytics.sentiment += "X";
+                    question.QuestionAnalytics.Sentiment += "x";
                 }
                 else if (ds.Sentiment == TextSentiment.Negative)
                 {
-                    question.QuestionAnalytics.sentiment += "N";
+                    question.QuestionAnalytics.Sentiment += "n";
                 }
                 else
                 {
-                    question.QuestionAnalytics.sentiment += "Q";
+                    question.QuestionAnalytics.Sentiment += "q";
                 }
+            }
+
+            if (question.QuestionAnalytics.Name != ""
+                && question.QuestionAnalytics.Time != ""
+                && question.QuestionAnalytics.Location != "")
+            {
+                question.IsFollowing = false;
             }
 
             _dbContext.QuestionUsers.Add(question);
