@@ -4,6 +4,9 @@ using System.Text;
 using System.Text.Json;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using EmotionRecognition_FunTime.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace EmotionRecognition_FunTime.Controllers
 {
@@ -13,37 +16,45 @@ namespace EmotionRecognition_FunTime.Controllers
     public class KnowledgebaseController : ControllerBase
     {
         [HttpPost]
-        [Route("Get")]
-        public string get()
-        {
-
-            return "hello";
-        }
-
-        [HttpPost]
         [Route("MakeRequest")]
-        public async Task<string> MakeRequest(IFormCollection data) //IFormCollection
+        public async Task<QnaModel> MakeRequest(IFormCollection data) //IFormCollection
         {
-            var client = new HttpClient();
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            HttpClient client = new HttpClient();
+            string uri;
+            string body;
             string result;
+            bool isNeutral = true;
+            string text = data["Text"].ToString();
 
-            // Request headers
-            //string d = data.ToString();
+            for (int i = 0; i < text.Length - 1; i++)
+            {
+                if (text.Substring(i) != "x")
+                {
+                    isNeutral = false;
+                }
+            }
 
+            if (isNeutral)
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "EndpointKey e3f70fd0-caae-4363-acaa-bd6f314e030a");
 
-            client.DefaultRequestHeaders.Add("Authorization", "EndpointKey e3f70fd0-caae-4363-acaa-bd6f314e030a");//key
-            //var queryingURL = "https://ft-qna.azurewebsites.net";
-            var uri = "https://ft-coreui.azurewebsites.net/qnamaker/knowledgebases/f846516d-e0cd-4595-b21c-2155b2c22523/generateAnswer" + queryString;
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
+                uri = "https://ft-coreui.azurewebsites.net/qnamaker/knowledgebases/f846516d-e0cd-4595-b21c-2155b2c22523/generateAnswer" + queryString;
+                body = "{\"question\" : " + "\"" + data["question"] + "\"}";
+
+            }
+            else //Complex Structure
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "EndpointKey e3f70fd0-caae-4363-acaa-bd6f314e030a");
+
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
+                uri = "https://ft-coreui.azurewebsites.net/qnamaker/knowledgebases/3ef2c6e1-5e29-46db-bae6-9bcef2127dd1/generateAnswer" + queryString;
+                body = "{\"question\" : " + "\"" + data["Text"] + "\"}";
+
+            }
 
             HttpResponseMessage response;
 
-            // Request body
-            //string body = JsonSerializer.Serialize(data);
-
-            //byte[] byteData = Encoding.UTF8.GetBytes("{\"question\" : \"I am happy\"}");
-
-            string body = "{\"question\" : " + "\"" + data["question"] + "\"}";
             byte[] byteData = Encoding.UTF8.GetBytes(body);
             using (var content = new ByteArrayContent(byteData))
             {
@@ -52,7 +63,12 @@ namespace EmotionRecognition_FunTime.Controllers
                 result = await response.Content.ReadAsStringAsync();
             }
 
-            return result;
+            JObject convert  = JObject.Parse(result);
+            string val = isNeutral
+                ? convert["answers"][0]["answer"].ToString()
+                : String.Format(convert["answers"][0]["answer"].ToString(), data["Name"], data["Place"], data["Time"]);
+            QnaModel returnVal = new QnaModel(val);
+            return returnVal;
         }
     }
 }
