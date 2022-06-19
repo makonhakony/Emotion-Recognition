@@ -43,7 +43,9 @@ namespace EmotionRecognition_FunTime.Controllers
         {
             UserQuestion question;
             
-            if( input["QuestionId"] == Guid.Empty || !input.ContainsKey("QuestionId"))
+            if( input["QuestionId"] == Guid.Empty 
+                || !input.ContainsKey("QuestionId")
+                || input["QuestionId"] == "")
             {
                 if (input["UserId"] == Guid.Empty || !input.ContainsKey("UserId"))
                 {

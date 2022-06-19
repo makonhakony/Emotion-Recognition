@@ -26,7 +26,7 @@ namespace EmotionRecognition_FunTime.Controllers
             bool isNeutral = true;
             string text = data["Text"].ToString();
 
-            for (int i = 0; i < text.Length - 1; i++)
+            for (int i = 0; i < text.Length; i++)
             {
                 if (text.Substring(i) != "x")
                 {
@@ -66,9 +66,21 @@ namespace EmotionRecognition_FunTime.Controllers
             JObject convert  = JObject.Parse(result);
             string val = isNeutral
                 ? convert["answers"][0]["answer"].ToString()
-                : String.Format(convert["answers"][0]["answer"].ToString(), data["Name"], data["Location"], data["Time"]);
+                : String.Format(convert["answers"][0]["answer"].ToString()
+                    , SplitLastChar(data["Name"].ToString())
+                    , SplitLastChar(data["Location"].ToString())
+                    , SplitLastChar(data["Time"].ToString())
+                    );
             QnaModel returnVal = new QnaModel(val);
             return returnVal;
+        }
+
+        public string SplitLastChar(string input)
+        {
+            string result;
+            result = input.Split(",").ToList().LastOrDefault();
+
+            return result;
         }
     }
 }

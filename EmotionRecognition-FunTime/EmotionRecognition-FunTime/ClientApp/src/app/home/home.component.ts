@@ -32,9 +32,6 @@ export class HomeComponent {
   }
 
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    var text = "blah blah";
-    var strTest = "This is a `${text}`";
-    console.log(strTest);
   }
 
   private extractAnalytics(result: any) : string{
@@ -76,6 +73,9 @@ export class HomeComponent {
       if (analyticsRes["isFollowing"]){
         this.followedUpQuestion = analyticsRes["id"]
       }
+      else{
+        this.followedUpQuestion = ''
+      }
       let formDataQnA = new FormData();
       formDataQnA.append("question", this.input);
       formDataQnA.append("Text", this.extractAnalytics(analyticsRes));
@@ -83,10 +83,12 @@ export class HomeComponent {
       formDataQnA.append("Name", analyticsRes["questionAnalytics"]["name"] ?? null);
       formDataQnA.append("Time", analyticsRes["questionAnalytics"]["time"] ?? null);
 
-
       this.http.post(this.baseUrl + 'Knowledgebase/MakeRequest', formDataQnA)
       .subscribe((result: any) => {
-        this.response = result["text"];
+        this.response = '';
+        setTimeout(()=>{
+        this.response = result["text"]
+     }, 100);
       });
     })
   }
