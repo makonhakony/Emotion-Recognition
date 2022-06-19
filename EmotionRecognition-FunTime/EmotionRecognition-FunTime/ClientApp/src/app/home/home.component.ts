@@ -66,7 +66,6 @@ export class HomeComponent {
 
 
     this.http.post(this.baseUrl+ 'textanalysis/PostAnalytics', formDataAnalyics).subscribe((analyticsRes:any)=>{
-      console.log(analyticsRes)
       if (!analyticsRes["hasUser"]){
         this.userId = analyticsRes["userId"]
       }
@@ -76,9 +75,11 @@ export class HomeComponent {
       else{
         this.followedUpQuestion = ''
       }
+      let extracted = this.extractAnalytics(analyticsRes)
+      console.log(extracted)
       let formDataQnA = new FormData();
       formDataQnA.append("question", this.input);
-      formDataQnA.append("Text", this.extractAnalytics(analyticsRes));
+      formDataQnA.append("Text", extracted);
       formDataQnA.append("Location", analyticsRes["questionAnalytics"]["location"] ?? null);
       formDataQnA.append("Name", analyticsRes["questionAnalytics"]["name"] ?? null);
       formDataQnA.append("Time", analyticsRes["questionAnalytics"]["time"] ?? null);
