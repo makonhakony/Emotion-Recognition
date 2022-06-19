@@ -28,7 +28,10 @@ namespace EmotionRecognition_FunTime.Controllers
 
             if (text.Length == 1)
             {
-                text += "s";
+                if (text != "x")
+                {
+                    text += "s";
+                }
             }
 
             for (int i = 0; i < text.Length; i++)
