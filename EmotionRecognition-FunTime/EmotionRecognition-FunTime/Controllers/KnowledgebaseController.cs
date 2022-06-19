@@ -26,6 +26,11 @@ namespace EmotionRecognition_FunTime.Controllers
             bool isNeutral = true;
             string text = data["Text"].ToString();
 
+            if (text.Length == 1)
+            {
+                text += "s";
+            }
+
             for (int i = 0; i < text.Length; i++)
             {
                 if (text.Substring(i) != "x")
@@ -49,7 +54,7 @@ namespace EmotionRecognition_FunTime.Controllers
 
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 uri = "https://ft-coreui.azurewebsites.net/qnamaker/knowledgebases/3ef2c6e1-5e29-46db-bae6-9bcef2127dd1/generateAnswer" + queryString;
-                body = "{\"question\" : " + "\"" + data["Text"] + "\"}";
+                body = "{\"question\" : " + "\"" + text + "\"}";
 
             }
 
